@@ -1,3 +1,4 @@
+import Details from './Details'
 import Main from './Main'
 
-export { Main }
+export { Details, Main }

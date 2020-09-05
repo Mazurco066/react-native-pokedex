@@ -14,12 +14,15 @@ const WelcomeLabel = styled(Text)`
   margin-bottom: 16px;
 `
 
-export default () => {
+export default ({ navigation: { navigate } }) => {
 
   const [ loading, setLoading ] = useState(true)
   const [ pokemons, setPokemons ] = useState([])
+  const [ query, setQuery] = useState('')
 
-  useEffect(() => {
+  useEffect(() => loadPokemons(), [])
+
+  const loadPokemons = () => {
     tryAwait({
       promise: api.pokemons.listPokemons(),
       onResponse: ({ data }) => setPokemons(data),
@@ -32,19 +35,25 @@ export default () => {
       },
       onLoad: _loading => setLoading(_loading)
     })
-  }, [])
+  }
 
   const renderInputIcon = (props) => (
-    <TouchableOpacity onPress={() => { console.log('Search here') }}>
+    <TouchableOpacity onPress={() => filterPokemons()}>
       <Icon {...props} name='search'/>
     </TouchableOpacity>
-  );
+  )
+
+  const filterPokemons = () => {
+    if (query) {
+      
+    }
+  }
 
   const renderItem = ({ item, index }) =>
     <ListItem
       key={index}
       {...item}
-      onPress={() => console.log('Vai tomar no cu')}
+      onPress={() => navigate('Details', { ...item })}
     />
 
   return (
@@ -60,6 +69,8 @@ export default () => {
         <Input
           style={{ marginHorizontal: 8, marginBottom: 8 }}
           accessoryRight={renderInputIcon}
+          onChangeText={t => setQuery(t)}
+          value={query}
         />
         { loading ? (
           <LoadingPlaceholder />
@@ -69,7 +80,7 @@ export default () => {
             removeClippedSubviews
             windowSize={21}
             numColumns={2}
-            data={pokemons}
+            data={query ? pokemons.filter(p => p.name.english.includes(query)) : pokemons}
             keyExtractor={({ id }) => id}
             renderItem={renderItem}
             ItemSeparatorComponent={() => <Divider my={2} />}
