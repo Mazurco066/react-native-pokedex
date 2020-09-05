@@ -6,6 +6,6 @@ export default axios.create({
   baseURL: BASE_URL
 })
 
-export const httpClientJson = axios.create({
+export const httpClientJson2 = axios.create({
   baseURL: BASE_URL_JSON
 })

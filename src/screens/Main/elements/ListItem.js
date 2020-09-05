@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { Image, View } from 'react-native'
 import { useTheme, Text, Card } from '@ui-kitten/components'
-import { typeColors } from '../../../helpers'
+import { typeColors } from '~/helpers'
 import styled from 'styled-components'
 import { color } from 'styled-system'
 
@@ -53,13 +53,11 @@ const PokeName = styled(Text)`
   ${color}
 `
 
-export default memo(({ name: { english }, id, type, onPress = () => {} }) => {
+export default memo(({ name, num, type, onPress = () => {} }) => {
   const theme = useTheme()
 
-  const generateImgUri = (id) =>
-    `https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${id
-      .toString()
-      .padStart(3, '0')}.png`
+  const generateImgUri = () =>
+    `https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${num}.png`
 
   return (
     <Card style={{ flex: 1, marginHorizontal: 4 }} onPress={onPress}>
@@ -70,17 +68,17 @@ export default memo(({ name: { english }, id, type, onPress = () => {} }) => {
             height: 100,
             resizeMode: 'contain',
           }}
-          source={{ uri: generateImgUri(id) }}
+          source={{ uri: generateImgUri() }}
         />
       </PokeImage>
       <Row style={{ marginTop: 16 }}>
         <Col>
           <PokeCode color={theme['color-primary-500']}>
-            #{id.toString().padStart(3, '0')}
+            #{num}
           </PokeCode>
         </Col>
         <Col>
-          <PokeName>{english}</PokeName>
+          <PokeName>{name}</PokeName>
         </Col>
       </Row>
       <PokeTypeRow style={{ marginTop: 8 }}>
