@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import { Layout, Text, Input, Icon } from '@ui-kitten/components'
-import { Badge, Header, ListItem } from './elements'
+import { Header, ListItem } from './elements'
 import { showMessage } from 'react-native-flash-message'
 import { Divider, EmptyPlaceholder, LoadingPlaceholder } from '../../components'
 import { tryAwait } from '../../utils'
-import shortid from 'shortid'
 import styled from 'styled-components'
 import api from '../../api'
 
@@ -19,15 +18,11 @@ export default () => {
 
   const [ loading, setLoading ] = useState(true)
   const [ pokemons, setPokemons ] = useState([])
-  const [ offset, setOffset ] = useState(0)
 
   useEffect(() => {
     tryAwait({
-      promise: api.pokemons.listPokemons(40, offset),
-      onResponse: ({ data: { results } }) => {
-        setOffset(offset + 40)
-        setPokemons(results)
-      } ,
+      promise: api.pokemons.listPokemons(),
+      onResponse: ({ data }) => setPokemons(data),
       onError: () => {
         showMessage({
           message: 'Erro',
@@ -39,23 +34,6 @@ export default () => {
     })
   }, [])
 
-  loadPokemons = () => {
-    tryAwait({
-      promise: api.pokemons.listPokemons(40, offset),
-      onResponse: ({ data: { results } }) => {
-        setOffset(offset + 40)
-        setPokemons([ ...pokemons, ...results ])
-      } ,
-      onError: () => {
-        showMessage({
-          message: 'Erro',
-          description: 'Errors while listing more pokémons.',
-          type: 'danger'
-        })
-      }
-    })
-  }
-
   const renderInputIcon = (props) => (
     <TouchableOpacity onPress={() => { console.log('Search here') }}>
       <Icon {...props} name='search'/>
@@ -63,10 +41,14 @@ export default () => {
   );
 
   const renderItem = ({ item, index }) =>
-    <ListItem key={index} {...item} />
+    <ListItem
+      key={index}
+      {...item}
+      onPress={() => console.log('Vai tomar no cu')}
+    />
 
   return (
-    <Layout style={{ flex: 1 }}>
+    <Layout style={{ flex: 1 }} level='4'>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior="padding"
@@ -83,23 +65,22 @@ export default () => {
           <LoadingPlaceholder />
         ) : (
           <FlatList
+            bounces={false}
             removeClippedSubviews
-            windowSize={20}
+            windowSize={21}
+            numColumns={2}
             data={pokemons}
-            ListEmptyComponent={() => <EmptyPlaceholder />}
-            keyExtractor={() => shortid()}
+            keyExtractor={({ id }) => id}
             renderItem={renderItem}
+            ItemSeparatorComponent={() => <Divider my={2} />}
+            ListEmptyComponent={() => <EmptyPlaceholder />}
             contentContainerStyle={{
               paddingVertical: 8,
-              paddingHorizontal: 8
+              paddingHorizontal: 4
             }}
-            onEndReached={() => loadPokemons() }
-            onEndReachedThreshold={0.4}
-            ItemSeparatorComponent={() => <Divider my={2} />}
           />
         )}
       </KeyboardAvoidingView>
-      <Badge />
     </Layout>
   )
 }

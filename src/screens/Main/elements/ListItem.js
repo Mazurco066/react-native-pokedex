@@ -1,15 +1,17 @@
-import React from 'react'
-import { TouchableOpacity, Image, View } from 'react-native'
-import { Text, Card } from '@ui-kitten/components'
+import React, { memo } from 'react'
+import { Image, View } from 'react-native'
+import { useTheme, Text, Card } from '@ui-kitten/components'
+import { typeColors } from '../../../helpers'
 import styled from 'styled-components'
-
-import pokebadge from '../../../assets/images/pokebadge.png'
+import { color } from 'styled-system'
 
 const Col = styled(View)`
-  position: relative;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+`
+
+const PokeImage = styled(View)`
+  justify-content: center;
+  align-items: center;
 `
 
 const Row = styled(View)`
@@ -17,59 +19,82 @@ const Row = styled(View)`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-`;
+`
 
 const PokeCode = styled(Text)`
   text-transform: uppercase;
-  background: yellow;
-  padding-top: 8px;
-  padding-left: 8px;
-  padding-right: 8px;
-  color: black;
+  text-align: left;
+  font-size: 8px;
+  color: ${(props) => (props.color ? props.color : 'white')};
+`
+
+const PokeTypeRow = styled(View)`
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  width: 100%;
+`
+
+const PokeType = styled(Text)`
+  font-size: 6px;
+  padding-top: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  margin-bottom: 4px;
+  background: ${(props) => (props.bg ? props.bg : 'white')};
 `
 
 const PokeName = styled(Text)`
   text-transform: capitalize;
-  margin-top: 8px;
+  text-align: right;
+  font-size: 8px;
+  ${color}
 `
 
-export default ({ name, url }) => {
+export default memo(({ name: { english }, id, type, onPress = () => {} }) => {
+  const theme = useTheme()
 
-  const pokeId = url.split('/').reverse()[1]
-
-  const generateImgUri = id =>
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+  const generateImgUri = (id) =>
+    `https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${id
+      .toString()
+      .padStart(3, '0')}.png`
 
   return (
-    <TouchableOpacity onPress={() => { console.log('seu cu') }}>
-      <Card>
-        <Row>
-          <Col>
-            <PokeCode>Nº {pokeId.padStart(3, '0')}</PokeCode>
-            <PokeName>{name}</PokeName>
-          </Col>
-          <Col>
-            <Image
-              style={{
-                width: 80,
-                height: 80,
-                resizeMode: 'contain',
-                position: 'absolute',
-                transform: [{ rotate: '30deg' }]
-              }}
-              source={pokebadge}
-            />
-            <Image
-              style={{ 
-                width: 80,
-                height: 80,
-                resizeMode: 'contain'
-              }}
-              source={{ uri: generateImgUri(pokeId) }}
-            />
-          </Col>
-        </Row>
-      </Card>
-    </TouchableOpacity>
+    <Card style={{ flex: 1, marginHorizontal: 4 }} onPress={onPress}>
+      <PokeImage>
+        <Image
+          style={{
+            width: 100,
+            height: 100,
+            resizeMode: 'contain',
+          }}
+          source={{ uri: generateImgUri(id) }}
+        />
+      </PokeImage>
+      <Row style={{ marginTop: 16 }}>
+        <Col>
+          <PokeCode color={theme['color-primary-500']}>
+            #{id.toString().padStart(3, '0')}
+          </PokeCode>
+        </Col>
+        <Col>
+          <PokeName>{english}</PokeName>
+        </Col>
+      </Row>
+      <PokeTypeRow style={{ marginTop: 8 }}>
+        {type &&
+          type.map((t, i) => (
+            <PokeType
+              style={{ marginRight: i + 1 == type.length ? 0 : 8 }}
+              bg={typeColors[t]}
+              key={i}
+            >
+              {t}
+            </PokeType>
+          ))}
+      </PokeTypeRow>
+    </Card>
   )
-}
+})

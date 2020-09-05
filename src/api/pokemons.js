@@ -1,4 +1,4 @@
-import httpClient from './httpClient'
+import { httpClientJson } from './httpClient'
 
-export const listPokemons = async (limit = 40, offset = 0) => 
-  await httpClient.get(`/pokemon?limit=${limit}&offset=${offset}`)
+export const listPokemons = async () => 
+  await httpClientJson.get(`/pokedex.json`)
