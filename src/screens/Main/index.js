@@ -82,7 +82,7 @@ const Main = ({ navigation: { navigate }, list, setupPokemonList }) => {
           data={list}
           keyExtractor={({ id }) => id}
           renderItem={renderItem}
-          ItemSeparatorComponent={() => <Divider my={2} />}
+          ItemSeparatorComponent={() => <Divider my={1} />}
           ListEmptyComponent={() => <EmptyPlaceholder />}
           contentContainerStyle={{
             paddingVertical: 8,

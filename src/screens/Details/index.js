@@ -192,6 +192,9 @@ export default ({  route: {
         </Layout>
         <Layout level="1" style={{ flex: 1 }}>
           <Evolutions
+            id={id}
+            num={num}
+            name={name}
             prev_evolution={prev_evolution}
             next_evolution={next_evolution}
           />

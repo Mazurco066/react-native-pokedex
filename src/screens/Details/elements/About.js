@@ -49,7 +49,7 @@ export default ({
       <AboutRow>
         <Label>Weakness:</Label>
         <Value>
-          {weaknesses.map((w, i) => i == weaknesses.length ? w : `${w}, `)}
+          {weaknesses.map((w, i) => (i+ 1) == weaknesses.length ? w : `${w}, `)}
         </Value>
       </AboutRow>
     </ScrollView>
