@@ -1,3 +1,3 @@
-import * as authActions from './auth'
+import * as pokemonActions from './pokemons'
 
-export { authActions }
+export { pokemonActions }

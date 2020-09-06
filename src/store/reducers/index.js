@@ -2,13 +2,13 @@ import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist'
 import storage from '@react-native-community/async-storage'
 
-import auth from './auth'
+import pokemons from './pokemon'
 
 const persist = (key, reducer) =>
-  persistReducer({ key: `RN.TEMPLATE/${key}`, storage }, reducer)
+  persistReducer({ key: `POKEDEX/${key}`, storage }, reducer)
 
 const appReducer = combineReducers({
-  auth: persist('AUTH_STORAGE', auth)
+  pokemon: persist('POKEMON_STORAGE', pokemons)
 })
 
 const rootReducer = (state, action) => {

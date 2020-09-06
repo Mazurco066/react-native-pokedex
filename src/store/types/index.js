@@ -1,3 +1,3 @@
-import * as authTypes from './auth'
+import * as pokemonTypes from './pokemon'
 
-export { authTypes }
+export { pokemonTypes }

@@ -1,17 +1,17 @@
-import { authTypes } from '../types'
+import { pokemonTypes } from '../types'
 
-const { HYDRATE_AUTH_DATA } = authTypes
+const { POKEMON_LIST_DATA } = pokemonTypes
 
 const initialState = {
-  authData: null
+  list: []
 }
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case HYDRATE_AUTH_DATA:
+    case POKEMON_LIST_DATA:
       return {
         ...state,
-        authData: payload
+        list: payload
       }
     default:
       return state

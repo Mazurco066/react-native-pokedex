@@ -3,7 +3,10 @@ import { FlatList, Image } from 'react-native'
 import { Layout, Icon, TopNavigation, TopNavigationAction, useTheme } from '@ui-kitten/components'
 import { ListItem, Badge } from './elements'
 import { showMessage } from 'react-native-flash-message'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { Divider, EmptyPlaceholder, LoadingPlaceholder } from '~/components'
+import { pokemonActions } from '~/store/actions'
 import { tryAwait } from '~/utils'
 import styled from 'styled-components'
 import api from '~/api'
@@ -14,17 +17,16 @@ const TopBar = styled(TopNavigation)`
   background: ${(props) => (props.bg ? props.bg : 'white')};
 `
 
-export default ({ navigation: { navigate } }) => {
+const Main = ({ navigation: { navigate }, list, setupPokemonList }) => {
 
   const theme = useTheme()
 
   const [ loading, setLoading ] = useState(true)
-  const [ pokemons, setPokemons ] = useState([])
 
   useEffect(() => {
     tryAwait({
       promise: api.pokemons.listPokemons(),
-      onResponse: ({ data: { pokemon } }) => setPokemons(pokemon),
+      onResponse: ({ data: { pokemon } }) => setupPokemonList(pokemon),
       onError: () => {
         showMessage({
           message: 'Erro',
@@ -77,7 +79,7 @@ export default ({ navigation: { navigate } }) => {
           removeClippedSubviews
           windowSize={21}
           numColumns={2}
-          data={pokemons}
+          data={list}
           keyExtractor={({ id }) => id}
           renderItem={renderItem}
           ItemSeparatorComponent={() => <Divider my={2} />}
@@ -92,3 +94,15 @@ export default ({ navigation: { navigate } }) => {
     </Layout>
   )
 }
+
+const mapStateToProps = state => {
+  const { pokemon: { list = [] } } = state
+  return { list }
+}
+
+const mapDispatchToProps = dispatch => {
+  const { setupPokemonList } = pokemonActions
+  return bindActionCreators({ setupPokemonList }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main)
