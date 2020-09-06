@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { View, Image } from 'react-native'
-import { Layout, Text, TopNavigation, TopNavigationAction, Icon, useTheme } from '@ui-kitten/components'
+import { Layout, Text, TopNavigation, TopNavigationAction, Icon, ViewPager, useTheme } from '@ui-kitten/components'
 import { showMessage } from 'react-native-flash-message'
 import { useNavigation } from '@react-navigation/native'
+import { LoadingPlaceholder } from '~/components'
+import { Stats, Evolutions } from './elements'
 import { tryAwait } from '~/utils'
 import { typeColors } from '~/helpers'
 import styled from 'styled-components'
@@ -44,16 +46,18 @@ const PokeType = styled(Text)`
   padding-left: 8px;
   padding-right: 8px;
   background: ${(props) => (props.bg ? props.bg : 'white')};
+  color: white;
 ` 
 
 export default ({  route: {
-  params: { id, name, type, num }
+  params: { id, name, type, num, prev_evolution, next_evolution }
 }}) => {
 
   const theme = useTheme()
   const { goBack } = useNavigation()
 
   const [ loading, setLoading ] = useState(true)
+  const [ selectedIndex, setSelectedIndex ] = useState(0)
   const [ details, setDetails ] = useState({})
 
   useEffect(() => {
@@ -72,7 +76,7 @@ export default ({  route: {
   }, [])
 
   return (
-    <Layout style={{ flex: 1 }} level='4'>
+    <Layout style={{ flex: 1 }} level="4">
       <PokeNavigation
         bg={typeColors[type[0]]}
         alignment="center"
@@ -107,6 +111,25 @@ export default ({  route: {
           ))}
         </PokeTypeRow>
       </PokeBackground>
+      <ViewPager
+        style={{ flex: 1 }}
+        selectedIndex={selectedIndex}
+        onSelect={index => setSelectedIndex(index)}
+      >
+        <Layout level="4">
+          {loading ? (
+            <LoadingPlaceholder />
+          ) : (
+            <Stats {...details} />
+          )}
+        </Layout>
+        <Layout level="4">
+          <Evolutions
+            prev_evolution={prev_evolution}
+            next_evolution={next_evolution}
+          />
+        </Layout>
+      </ViewPager>
     </Layout>
   )
 }

@@ -44,6 +44,7 @@ const PokeType = styled(Text)`
   padding-right: 4px;
   margin-bottom: 4px;
   background: ${(props) => (props.bg ? props.bg : 'white')};
+  color: white;
 `
 
 const PokeName = styled(Text)`

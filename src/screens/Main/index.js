@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, Image } from 'react-native'
 import { Layout, Icon, TopNavigation, TopNavigationAction, useTheme } from '@ui-kitten/components'
 import { ListItem, Badge } from './elements'
 import { showMessage } from 'react-native-flash-message'
@@ -7,6 +7,8 @@ import { Divider, EmptyPlaceholder, LoadingPlaceholder } from '~/components'
 import { tryAwait } from '~/utils'
 import styled from 'styled-components'
 import api from '~/api'
+
+import pokeball from '../../assets/images/pokeball.png'
 
 const TopBar = styled(TopNavigation)`
   background: ${(props) => (props.bg ? props.bg : 'white')};
@@ -48,7 +50,17 @@ export default ({ navigation: { navigate } }) => {
         title="Pokémons"
         subtitle="1º Generation"
         alignment="center"
-
+        accessoryLeft={() => (
+          <Image
+            style={{
+              marginLeft: 8,
+              width: 32,
+              height: 32,
+              resizeMode: 'contain'
+            }}
+            source={pokeball}
+          />
+        )}
         accessoryRight={() => (
           <TopNavigationAction
             style={{ padding: 8 }}

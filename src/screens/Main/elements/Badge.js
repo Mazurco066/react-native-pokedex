@@ -1,12 +1,14 @@
 import React from 'react'
-import { Text, Card } from '@ui-kitten/components'
+import { View } from 'react-native'
+import { Text, useTheme } from '@ui-kitten/components'
 import styled from 'styled-components'
 
-const DataSourceCard = styled(Card)`
+const DataSourceCard = styled(View)`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: blue;
+  background: ${props => props.bg ? props.bg : 'blue'};
+  padding-top: 8px;
 `
 
 const DataSourceText = styled(Text)`
@@ -15,8 +17,10 @@ const DataSourceText = styled(Text)`
 `
 
 export default () => {
+  const theme = useTheme()
+
   return (
-    <DataSourceCard>
+    <DataSourceCard bg={theme['color-primary-400']}>
       <DataSourceText>Data provided by Pokéapi V2</DataSourceText>
     </DataSourceCard>
   )

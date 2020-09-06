@@ -20,7 +20,7 @@ export default () => {
     <>
       <IconRegistry icons={EvaIconsPack} />
       <StatusBar theme="dark"/>
-      <ApplicationProvider {...eva} theme={{ ...eva.dark, ...theme }}>
+      <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <SafeAreaView style={{ flex: 1 }}>
