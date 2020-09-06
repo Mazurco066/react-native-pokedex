@@ -1,7 +1,7 @@
-import httpClient, { httpClientJson2 } from './httpClient'
+import httpClient, { httpClientJson } from './httpClient'
 
 export const listPokemons = async () => 
-  await httpClientJson2.get(`/pokedex.json`)
+  await httpClientJson.get(`/pokedex.json`)
 
 export const pokemonDetails = async (id) =>
   await httpClient.get(`/pokemon/${id}`)

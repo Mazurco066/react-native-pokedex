@@ -3,6 +3,8 @@ import { View, Image } from 'react-native'
 import {
   Layout,
   Text,
+  Tab,
+  TabBar,
   TopNavigation,
   TopNavigationAction,
   Icon,
@@ -156,6 +158,13 @@ export default ({  route: {
           ))}
         </PokeTypeRow>
       </PokeBackground>
+      <TabBar
+        selectedIndex={selectedIndex}
+        onSelect={index => setSelectedIndex(index)}>
+        <Tab title='About'/>
+        <Tab title='Stats'/>
+        <Tab title='Evolutions'/>
+      </TabBar>
       <ViewPager
         style={{ flex: 1 }}
         selectedIndex={selectedIndex}

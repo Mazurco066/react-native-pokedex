@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { Text } from '@ui-kitten/components'
 import styled from 'styled-components'
 
@@ -27,7 +27,7 @@ export default ({
   species: { name }
 }) => {
   return (
-    <View style={{ padding: 8 }}>
+    <ScrollView style={{ padding: 8 }}>
       <AboutRow>
         <Label>Species:</Label>
         <Value style={{ textTransform: 'capitalize' }}>
@@ -52,6 +52,6 @@ export default ({
           {weaknesses.map((w, i) => i == weaknesses.length ? w : `${w}, `)}
         </Value>
       </AboutRow>
-    </View>
+    </ScrollView>
   )
 }
