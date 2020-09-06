@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { View, Image } from 'react-native'
-import { Layout, Text, TopNavigation, TopNavigationAction, Icon, ViewPager, useTheme } from '@ui-kitten/components'
+import {
+  Layout,
+  Text,
+  TopNavigation,
+  TopNavigationAction,
+  Icon,
+  ViewPager
+} from '@ui-kitten/components'
 import { showMessage } from 'react-native-flash-message'
 import { useNavigation } from '@react-navigation/native'
 import { LoadingPlaceholder } from '~/components'
-import { Stats, Evolutions } from './elements'
+import { About, Badge, Stats, Evolutions } from './elements'
 import { tryAwait } from '~/utils'
 import { typeColors } from '~/helpers'
 import styled from 'styled-components'
 import api from '~/api'
+
+import pokebadge from '../../assets/images/pokebadge.png'
 
 const PokeNavigation = styled(TopNavigation)`
   background: ${(props) => (props.bg ? props.bg : 'white')};
@@ -19,7 +28,6 @@ const PokeBackground = styled(View)`
   height: 250px;
   padding: 8px;
   position: relative;
-  margin-bottom: 16px;
 `
 
 const PokeImage = styled(Image)`
@@ -27,9 +35,28 @@ const PokeImage = styled(Image)`
   width: 100%;
 `
 
+const BadgeImageSmall = styled(Image)`
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  left: -32px;
+  top: 0;
+  opacity: 0.5;
+  z-index: 0;
+`
+
+const BadgeImage = styled(Image)`
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  opacity: 0.5;
+`
+
 const PokeTypeRow = styled(View)`
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
   flex-grow: 1;
@@ -50,10 +77,20 @@ const PokeType = styled(Text)`
 ` 
 
 export default ({  route: {
-  params: { id, name, type, num, prev_evolution, next_evolution }
+  params: {
+    id,
+    name,
+    type,
+    num,
+    prev_evolution,
+    next_evolution,
+    weaknesses,
+    height,
+    weight,
+    egg
+  }
 }}) => {
 
-  const theme = useTheme()
   const { goBack } = useNavigation()
 
   const [ loading, setLoading ] = useState(true)
@@ -84,13 +121,21 @@ export default ({  route: {
         subtitle={`#${num}`}
         accessoryLeft={() => (
           <TopNavigationAction
-            style={{ padding: 8, paddingRight: 48 }}
+            style={{ padding: 8, paddingRight: 48, zIndex: 1 }}
             icon={props => <Icon name="arrow-back-outline" {...props} />}
             onPress={goBack}
           />
         )}
       />
       <PokeBackground bg={typeColors[type[0]]}>
+        <BadgeImageSmall
+          style={{ resizeMode: 'contain' }}
+          source={pokebadge}
+        />
+        <BadgeImage
+          style={{ resizeMode: 'contain' }}
+          source={pokebadge}
+        />
         <PokeImage
           style={{ resizeMode: 'contain' }}
           source={{ uri: `https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/images/${num}.png`}}
@@ -116,20 +161,34 @@ export default ({  route: {
         selectedIndex={selectedIndex}
         onSelect={index => setSelectedIndex(index)}
       >
-        <Layout level="4">
+        <Layout level="1" style={{ flex: 1 }}>
+          {loading ? (
+            <LoadingPlaceholder />
+          ) : (
+            <About
+              {...details}
+              weaknesses={weaknesses}
+              height={height}
+              weight={weight}
+              egg={egg}
+            />
+          )}
+        </Layout>
+        <Layout level="1" style={{ flex: 1 }}>
           {loading ? (
             <LoadingPlaceholder />
           ) : (
             <Stats {...details} />
           )}
         </Layout>
-        <Layout level="4">
+        <Layout level="1" style={{ flex: 1 }}>
           <Evolutions
             prev_evolution={prev_evolution}
             next_evolution={next_evolution}
           />
         </Layout>
       </ViewPager>
+      <Badge />
     </Layout>
   )
 }
