@@ -37,6 +37,8 @@
         "wasm",
         "svg"
       ]
-    }
+    },
+    "description": "A pokedex app developed by Gabriel Mazurco (Mazurco066)",
+    "githubUrl": "https://github.com/Mazurco066/react-native-pokedex"
   }
 }
