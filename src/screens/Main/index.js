@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image } from 'react-native'
-import { Layout, Icon, TopNavigation, TopNavigationAction, useTheme } from '@ui-kitten/components'
+import { FlatList, Image, KeyboardAvoidingView } from 'react-native'
+import {
+  Layout,
+  Icon,
+  Input,
+  TopNavigation,
+  TopNavigationAction,
+  useTheme
+} from '@ui-kitten/components'
 import { ListItem, Badge } from './elements'
 import { showMessage } from 'react-native-flash-message'
 import { bindActionCreators } from 'redux'
@@ -22,6 +29,8 @@ const Main = ({ navigation: { navigate }, list, setupPokemonList }) => {
   const theme = useTheme()
 
   const [ loading, setLoading ] = useState(true)
+  const [ searchStatus, setSearchStatus ] = useState(false)
+  const [ searchText, setSearchText ] = useState('')
 
   useEffect(() => {
     tryAwait({
@@ -37,6 +46,11 @@ const Main = ({ navigation: { navigate }, list, setupPokemonList }) => {
       onLoad: _loading => setLoading(_loading)
     })
   }, [])
+
+  const filteredItems = () => list.filter(item =>
+    item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.type.filter(t => t.toLowerCase() === searchText.toLowerCase()).length
+  )
 
   const renderItem = ({ item, index }) =>
     <ListItem
@@ -66,11 +80,22 @@ const Main = ({ navigation: { navigate }, list, setupPokemonList }) => {
         accessoryRight={() => (
           <TopNavigationAction
             style={{ padding: 8 }}
-            icon={props => <Icon name="search" {...props} />}
-            onPress={() => {}}
+            icon={props => <Icon name={searchStatus ? 'close-outline' : 'search' } {...props} />}
+            onPress={() =>  {
+              if (searchStatus) setSearchText('')
+              setSearchStatus(!searchStatus)
+            }}
           />
         )}
       />
+      <KeyboardAvoidingView behavior="padding">
+        { searchStatus && <Input
+          style={{ marginHorizontal: 8, marginTop: 8 }}
+          placeholder="Search here..."
+          value={searchText}
+          onChangeText={text => setSearchText(text)}
+        /> }
+      </KeyboardAvoidingView>
       { loading ? (
         <LoadingPlaceholder />
       ) : (
@@ -79,7 +104,7 @@ const Main = ({ navigation: { navigate }, list, setupPokemonList }) => {
           removeClippedSubviews
           windowSize={21}
           numColumns={2}
-          data={list}
+          data={filteredItems()}
           keyExtractor={({ id }) => id}
           renderItem={renderItem}
           ItemSeparatorComponent={() => <Divider my={1} />}
