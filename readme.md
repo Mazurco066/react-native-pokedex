@@ -1,6 +1,7 @@
 # Pokedex App
 
 A pokedex app developed by [@Mazurco066](https://github.com/Mazurco066).
+Expo publish url: [Pokedex](https://expo.io/@mazurco/pokedex).
 
 ## Screenshots
 
